@@ -3,6 +3,9 @@
 [![npm version](https://badge.fury.io/js/@nis2shield%2Freact-guard.svg)](https://badge.fury.io/js/@nis2shield%2Freact-guard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
+[![CI](https://github.com/nis2shield/react-guard/actions/workflows/ci.yml/badge.svg)](https://github.com/nis2shield/react-guard/actions/workflows/ci.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+
 
 **Client-Side Security Telemetry & Session Protection for NIS2 Compliance.**
 
