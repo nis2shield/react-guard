@@ -1,0 +1,251 @@
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --success: #10b981;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: #334155;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a2e 100%);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.version {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.demo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.demo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.demo-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.demo-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.demo-card small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 0.75rem;
+  opacity: 0.8;
+}
+
+.demo-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--text);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.demo-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-info {
+  background: #06b6d4;
+  color: white;
+}
+
+.btn-warning {
+  background: var(--warning);
+  color: #1a1a2e;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.status {
+  color: var(--success);
+  margin-top: 0.5rem;
+}
+
+.fingerprint-data {
+  background: var(--bg-dark);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  font-family: 'Monaco', 'Consolas', monospace;
+}
+
+.fingerprint-data div {
+  margin-bottom: 0.25rem;
+}
+
+.fingerprint-data strong {
+  color: var(--primary);
+}
+
+.error-fallback {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid var(--danger);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.status-indicator {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.status-indicator.active {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+.status-indicator.warning {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid var(--warning);
+  color: var(--warning);
+}
+
+.loading {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .demo-grid {
+    grid-template-columns: 1fr;
+  }
+}

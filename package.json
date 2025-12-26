@@ -1,0 +1,66 @@
+{
+    "name": "@nis2shield/react-guard",
+    "version": "0.2.0",
+    "description": "Client-side security telemetry and session protection for NIS2 compliance. Part of the NIS2 Shield ecosystem.",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE",
+        "CHANGELOG.md"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nis2shield/react-guard.git"
+    },
+    "bugs": {
+        "url": "https://github.com/nis2shield/react-guard/issues"
+    },
+    "homepage": "https://nis2shield.com",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "test": "vitest",
+        "test:coverage": "vitest --coverage",
+        "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "preview": "vite preview",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "react",
+        "nis2",
+        "security",
+        "telemetry",
+        "gdpr",
+        "audit",
+        "compliance",
+        "session",
+        "encryption",
+        "middleware",
+        "siem",
+        "forensic",
+        "idle-detection",
+        "error-boundary"
+    ],
+    "author": "Fabrizio Di Priamo <fabrizio.di.priamo@gmail.com>",
+    "license": "MIT",
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^14.0.0",
+        "@types/node": "^20.0.0",
+        "@types/react": "^18.2.15",
+        "@types/react-dom": "^18.2.7",
+        "@vitejs/plugin-react": "^4.0.3",
+        "jsdom": "^22.1.0",
+        "typescript": "^5.0.2",
+        "vite": "^4.4.5",
+        "vite-plugin-dts": "^3.3.1",
+        "vitest": "^0.33.0"
+    }
+}
