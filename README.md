@@ -11,6 +11,8 @@
 
 `@nis2shield/react-guard` is a React library designed to act as the "sentinel" for your frontend applications. It integrates with [`django-nis2-shield`](https://pypi.org/project/django-nis2-shield/) to provide end-to-end compliance coverage by monitoring client-side anomalies, protecting session data, and enforcing security policies directly in the browser.
 
+> **Part of the NIS2 Shield Ecosystem**: Use with [infrastructure](https://github.com/nis2shield/infrastructure) for **Demonstrable Compliance** (audited via `tfsec`).
+
 ## ✨ Features
 
 - **🛡️ Session Watchdog**: Detects user inactivity and "Tab Napping" (background tab hijacking risks)

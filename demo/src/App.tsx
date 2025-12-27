@@ -185,8 +185,6 @@ function WatchdogDemo() {
 }
 
 function App() {
-  const [showBanner, setShowBanner] = useState(true);
-
   return (
     <Nis2Provider
       config={{
@@ -195,15 +193,13 @@ function App() {
         debug: true,
       }}
     >
-      {showBanner && (
-        <SecurityBanner
-          config={{
-            checkBrowserVersion: true,
-            dismissible: true,
-            position: 'top',
-          }}
-        />
-      )}
+      <SecurityBanner
+        config={{
+          checkBrowserVersion: true,
+          dismissible: true,
+          position: 'top',
+        }}
+      />
 
       <SessionWatchdog
         onIdle={() => console.log('🔒 Session idle - would trigger logout')}
