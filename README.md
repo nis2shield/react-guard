@@ -9,7 +9,16 @@
 
 **Client-Side Security Telemetry & Session Protection for NIS2 Compliance.**
 
-`@nis2shield/react-guard` is a React library designed to act as the "sentinel" for your frontend applications. It integrates with [`django-nis2-shield`](https://pypi.org/project/django-nis2-shield/) to provide end-to-end compliance coverage by monitoring client-side anomalies, protecting session data, and enforcing security policies directly in the browser.
+## Why this package?
+
+Companies subject to NIS2 Directive require strict session management, audit logs, and client-side security controls. This library provides drop-in React components to handle:
+
+1. **Automatic session termination** (Idle Timer) - Art. 21.2.h
+2. **Visual protection** against shoulder surfing (Tab Napping)
+3. **Security event hooks** for SIEM integration
+4. **Encrypted local storage** for sensitive data (GDPR-compliant)
+
+`@nis2shield/react-guard` acts as the "sentinel" for your frontend applications, integrating with [`django-nis2-shield`](https://pypi.org/project/django-nis2-shield/) or [`@nis2shield/express-middleware`](https://www.npmjs.com/package/@nis2shield/express-middleware) to provide end-to-end compliance coverage.
 
 > **Part of the NIS2 Shield Ecosystem**: Use with [infrastructure](https://github.com/nis2shield/infrastructure) for **Demonstrable Compliance** (audited via `tfsec`).
 
@@ -147,6 +156,72 @@ const LoginPage = () => {
 │  ├── RateLimiter, SessionGuard, TorBlocker                 │
 │  └── → SIEM (Elasticsearch, Splunk, QRadar, etc.)          │
 └─────────────────────────────────────────────────────────────┘
+```
+
+## 📖 Recipes
+
+### Banking Dashboard with Auto-Logout
+
+```tsx
+import { Nis2Provider, SessionWatchdog, AuditBoundary, useSecureStorage } from '@nis2shield/react-guard';
+
+function BankingApp() {
+  return (
+    <Nis2Provider config={{ idleTimeoutMinutes: 5, auditEndpoint: '/api/audit/' }}>
+      <AuditBoundary fallback={<SecurityLockScreen />}>
+        <SessionWatchdog 
+          onIdle={() => { 
+            window.location.href = '/logout?reason=idle';
+          }} 
+        />
+        <Dashboard />
+      </AuditBoundary>
+    </Nis2Provider>
+  );
+}
+```
+
+### Protected Form with Encrypted Fields
+
+```tsx
+import { useSecureStorage, useSecureInput } from '@nis2shield/react-guard';
+
+const PaymentForm = () => {
+  const { value: cardNumber, setValue: setCardNumber } = useSecureStorage('card', '');
+  const secureProps = useSecureInput({ type: 'password' });
+  
+  return (
+    <form>
+      <input 
+        value={cardNumber} 
+        onChange={(e) => setCardNumber(e.target.value)}
+        placeholder="Card Number (encrypted locally)"
+      />
+      <input {...secureProps} placeholder="CVV" />
+    </form>
+  );
+};
+```
+
+### Login with Device Fingerprinting
+
+```tsx
+import { useDeviceFingerprint, useNis2Log } from '@nis2shield/react-guard';
+
+const LoginPage = () => {
+  const { fingerprint, sendToBackend } = useDeviceFingerprint();
+  const { logWarning } = useNis2Log();
+
+  const handleLogin = async (credentials) => {
+    // Send fingerprint with login for session hijacking detection
+    await sendToBackend();
+    
+    // Log high-risk attempts
+    if (credentials.failedAttempts > 3) {
+      logWarning('BRUTE_FORCE_ATTEMPT', { attempts: credentials.failedAttempts });
+    }
+  };
+};
 ```
 
 ## 🧪 Development

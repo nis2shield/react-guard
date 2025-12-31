@@ -15,8 +15,20 @@ interface Props {
 }
 
 /**
- * Invisible component that monitors user activity.
+ * Invisible component that monitors user activity for NIS2 compliance.
  * Handles Idle Timeout (Automatic Logout) and Tab Napping checks.
+ * 
+ * @example
+ * // Basic usage - auto-logout after 15 minutes of inactivity
+ * <SessionWatchdog onIdle={() => authService.logout()} />
+ * 
+ * @example
+ * // Banking app with 5-minute timeout and visual feedback
+ * <SessionWatchdog 
+ *   timeoutMinutes={5}
+ *   onIdle={() => window.location.href = '/logout?reason=idle'}
+ *   onActive={() => console.log('User active')}
+ * />
  */
 export const SessionWatchdog: React.FC<Props> = ({ onIdle, onActive }) => {
     const { config, setIdle, reportIncident } = useNis2Context();

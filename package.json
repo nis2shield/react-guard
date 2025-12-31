@@ -42,7 +42,12 @@
         "siem",
         "forensic",
         "idle-detection",
-        "error-boundary"
+        "error-boundary",
+        "cybersecurity",
+        "auto-logout",
+        "session-timeout",
+        "tab-napping",
+        "enterprise"
     ],
     "author": "Fabrizio Di Priamo <fabrizio.di.priamo@gmail.com>",
     "license": "MIT",
