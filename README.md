@@ -151,7 +151,7 @@ const LoginPage = () => {
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  Backend (NIS2 Adapter)                      │
-│  Supported: Django, Express, Spring Boot                    │
+│  Supported: Django, Express, Spring Boot, .NET            │
 │  ├── ForensicLogger (HMAC signed logs)                     │
 │  ├── RateLimiter, SessionGuard, TorBlocker                 │
 │  └── → SIEM (Elasticsearch, Splunk, QRadar, etc.)          │
