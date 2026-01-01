@@ -18,7 +18,7 @@ Companies subject to NIS2 Directive require strict session management, audit log
 3. **Security event hooks** for SIEM integration
 4. **Encrypted local storage** for sensitive data (GDPR-compliant)
 
-`@nis2shield/react-guard` acts as the "sentinel" for your frontend applications, integrating with [`django-nis2-shield`](https://pypi.org/project/django-nis2-shield/) or [`@nis2shield/express-middleware`](https://www.npmjs.com/package/@nis2shield/express-middleware) to provide end-to-end compliance coverage.
+`@nis2shield/react-guard` acts as the "sentinel" for your frontend applications, integrating with any **NIS2 Shield Backend Adapter** (Django, Express, Spring) to provide end-to-end compliance coverage.
 
 > **Part of the NIS2 Shield Ecosystem**: Use with [infrastructure](https://github.com/nis2shield/infrastructure) for **Demonstrable Compliance** (audited via `tfsec`).
 
@@ -150,11 +150,20 @@ const LoginPage = () => {
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                        Backend                               │
-│  django-nis2-shield                                         │
+│                  Backend (NIS2 Adapter)                      │
+│  Supported: Django, Express, Spring Boot                    │
 │  ├── ForensicLogger (HMAC signed logs)                     │
 │  ├── RateLimiter, SessionGuard, TorBlocker                 │
 │  └── → SIEM (Elasticsearch, Splunk, QRadar, etc.)          │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Infrastructure                            │
+│  nis2shield/infrastructure                                  │
+│  ├── Centralized Logging (ELK/Splunk)                       │
+│  ├── Compliance Reporting (Automatic PDF generation)        │
+│  └── Audited Deployment (Terraform/Helm)                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
