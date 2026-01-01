@@ -62,4 +62,17 @@ class AuditBoundaryClass extends Component<InternalProps, State> {
     }
 }
 
+/**
+ * Error Boundary that catches React component errors and reports them as security incidents.
+ * Automatically allows the application to fail gracefully while ensuring the crash is logged in the SIEM.
+ * 
+ * **NIS2 Compliance**: Helps meet requirements for "Incident Handling" by capturing client-side failures.
+ * 
+ * @example
+ * ```tsx
+ * <AuditBoundary fallback={<SecurityErrorPage />}>
+ *   <SensitiveDashboard />
+ * </AuditBoundary>
+ * ```
+ */
 export const AuditBoundary = AuditBoundaryWrapper;

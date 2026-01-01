@@ -2,22 +2,37 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 /**
  * Configuration options for the Nis2Provider.
+ * Defines the security parameters and backend integration points.
+ * 
+ * @example
+ * ```tsx
+ * const config: Nis2Config = {
+ *   auditEndpoint: 'https://api.example.com/nis2/logs',
+ *   idleTimeoutMinutes: 5, // Strict timeout for banking apps
+ *   debug: process.env.NODE_ENV === 'development'
+ * };
+ * ```
  */
 export interface Nis2Config {
     /**
-     * The endpoint URL to send telemetry and audit logs to.
-     * Typically points to the Django NIS2 Shield backend (e.g., '/api/nis2/telemetry/').
+     * The full URL of the backend endpoint to receive audit logs and telemetry.
+     * Must accept POST requests with JSON payload.
+     * 
+     * @example "https://api.myapp.com/api/nis2/report/"
      */
     auditEndpoint: string;
 
     /**
      * Time in minutes before the user is considered idle.
-     * Defaults to 15 minutes.
+     * Defaults to 15 minutes if not specified.
+     * 
+     * **Compliance**: Shorter timeouts (e.g., 5-10m) recommended for critical sectors.
      */
     idleTimeoutMinutes?: number;
 
     /**
-     * If true, logs debug information to the console.
+     * If true, logs granular security events to the browser console.
+     * Disable in production.
      */
     debug?: boolean;
 }
@@ -46,8 +61,26 @@ interface Nis2ProviderProps {
 }
 
 /**
- * The main provider component that wraps the application.
- * Manages configuration and global security state.
+ * The root provider that initializes the NIS2 Shield security context.
+ * Must wrap your application to enable SessionWatchdog, Hooks, and Audit logging.
+ * 
+ * @example
+ * ```tsx
+ * import { Nis2Provider } from '@nis2shield/react-guard';
+ * 
+ * const config = {
+ *   auditEndpoint: '/api/nis2/telemetry/',
+ *   idleTimeoutMinutes: 15
+ * };
+ * 
+ * function Root() {
+ *   return (
+ *     <Nis2Provider config={config}>
+ *       <App />
+ *     </Nis2Provider>
+ *   );
+ * }
+ * ```
  */
 export const Nis2Provider: React.FC<Nis2ProviderProps> = ({ children, config }) => {
     const [securityState, setSecurityState] = useState<Nis2SecurityState>({

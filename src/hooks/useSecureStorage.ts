@@ -7,8 +7,38 @@ type StorageType = 'localStorage' | 'sessionStorage';
  * A hook that works like a persistent useState, but encrypts data 
  * before saving to localStorage/sessionStorage.
  * 
- * NOTE: Since encryption is async (Web Crypto API), the setter is async 
- * but the state update is immediate for the UI.
+ * **NIS2 Compliance**: Helps meet Article 21 requirements for "Cryptography and Encryption"
+ * by ensuring sensitive client-side data is never stored in plain text.
+ * 
+ * @template T The type of the value to store.
+ * @param {string} key The storage key.
+ * @param {T} initialValue The initial value if storage is empty.
+ * @param {StorageType} [storageType='sessionStorage'] 'localStorage' or 'sessionStorage'.
+ * @returns {object} An object containing the current value, a setter, a remover, and loading state.
+ * 
+ * @example
+ * ```tsx
+ * import { useSecureStorage } from '@nis2shield/react-guard';
+ * 
+ * function UserProfile() {
+ *   // Securely store PII (Personally Identifiable Information)
+ *   const { 
+ *     value: email, 
+ *     setValue: setEmail, 
+ *     isLoading 
+ *   } = useSecureStorage<string>('user_email', '', 'sessionStorage');
+ * 
+ *   if (isLoading) return <p>Decrypting...</p>;
+ * 
+ *   return (
+ *     <input 
+ *       value={email} 
+ *       onChange={(e) => setEmail(e.target.value)} 
+ *       placeholder="Email is encrypted in storage"
+ *     />
+ *   );
+ * }
+ * ```
  */
 export function useSecureStorage<T>(key: string, initialValue: T, storageType: StorageType = 'sessionStorage') {
     const [storedValue, setStoredValue] = useState<T>(() => {

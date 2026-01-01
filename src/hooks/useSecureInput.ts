@@ -13,7 +13,28 @@ interface SecureInputOptions {
 
 /**
  * Returns a set of props to secure an HTML input element.
- * Disables autocomplete, copy/paste, and caches.
+ * Disables autocomplete, copy/paste, and caches to prevent sensitive data retention.
+ * 
+ * @param {SecureInputOptions} options Configuration options
+ * @returns {InputHTMLAttributes<HTMLInputElement>} Security props object
+ * 
+ * @example
+ * ```tsx
+ * import { useSecureInput } from '@nis2shield/react-guard';
+ * 
+ * function CreditCardInput() {
+ *   // Automatically adds: type="text", autocomplete="off", onCopy/Paste prevented
+ *   const secureProps = useSecureInput({ type: 'text', label: 'Credit Card' });
+ * 
+ *   return (
+ *     <input 
+ *       {...secureProps} 
+ *       className="secure-field"
+ *       placeholder="0000 0000 0000 0000"
+ *     />
+ *   );
+ * }
+ * ```
  */
 export const useSecureInput = (options: SecureInputOptions = {}): InputHTMLAttributes<HTMLInputElement> => {
     const secureProps = useMemo(() => {

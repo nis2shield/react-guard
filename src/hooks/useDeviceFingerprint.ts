@@ -104,13 +104,27 @@ function getWebGLInfo(): { renderer: string | null; vendor: string | null } {
  * 
  * @example
  * ```tsx
- * const { fingerprint, isLoading, sendToBackend } = useDeviceFingerprint();
+ * import { useEffect } from 'react';
+ * import { useDeviceFingerprint } from '@nis2shield/react-guard';
  * 
- * useEffect(() => {
- *   if (!isLoading) {
- *     sendToBackend(); // Automatically sends fingerprint as telemetry
- *   }
- * }, [isLoading]);
+ * function SecurityCheck({ savedFingerprint }: { savedFingerprint: any }) {
+ *   const { fingerprint, compareWith, isLoading } = useDeviceFingerprint();
+ * 
+ *   useEffect(() => {
+ *     if (!isLoading && fingerprint && savedFingerprint) {
+ *       // Compare current device with the one from login
+ *       const { similarity, mismatches } = compareWith(savedFingerprint);
+ * 
+ *       if (similarity < 0.8) {
+ *         // High risk of Session Hijacking
+ *         console.warn('Security Alert: Device mismatch', mismatches);
+ *         alert('New device detected. Please re-authenticate.');
+ *       }
+ *     }
+ *   }, [fingerprint, isLoading, savedFingerprint]);
+ * 
+ *   return null; // Passive component
+ * }
  * ```
  */
 export function useDeviceFingerprint() {
