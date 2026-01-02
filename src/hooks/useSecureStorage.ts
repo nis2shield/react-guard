@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { encryptData, decryptData } from '../utils/crypto';
+import { useState, useCallback, useEffect } from 'react';
+import { useNis2Context } from '../context/Nis2Context';
 
 type StorageType = 'localStorage' | 'sessionStorage';
 
@@ -41,6 +41,7 @@ type StorageType = 'localStorage' | 'sessionStorage';
  * ```
  */
 export function useSecureStorage<T>(key: string, initialValue: T, storageType: StorageType = 'sessionStorage') {
+    const { cryptoService } = useNis2Context();
     const [storedValue, setStoredValue] = useState<T>(() => {
         // Initial read is tricky because decryption is async.
         // For now, we return initialValue and try to hydrate in an effect 
@@ -59,7 +60,7 @@ export function useSecureStorage<T>(key: string, initialValue: T, storageType: S
             if (item) {
                 const parsed = JSON.parse(item);
                 if (parsed.data && parsed.iv) {
-                    const decryptedJson = await decryptData(parsed.data, parsed.iv);
+                    const decryptedJson = await cryptoService.decrypt(parsed.data, parsed.iv);
                     if (decryptedJson) {
                         setStoredValue(JSON.parse(decryptedJson));
                     }
@@ -70,7 +71,7 @@ export function useSecureStorage<T>(key: string, initialValue: T, storageType: S
         } finally {
             setIsLoading(false);
         }
-    }, [key, storageType]);
+    }, [key, storageType, cryptoService]);
 
     // Set Value Wrapper
     const setValue = async (value: T) => {
@@ -81,7 +82,7 @@ export function useSecureStorage<T>(key: string, initialValue: T, storageType: S
 
             // Encrypt and save to storage
             const jsonStr = JSON.stringify(valueToStore);
-            const encrypted = await encryptData(jsonStr);
+            const encrypted = await cryptoService.encrypt(jsonStr);
 
             const storage = window[storageType];
             storage.setItem(key, JSON.stringify(encrypted));

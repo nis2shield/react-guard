@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
+import { SessionGuardian, TelemetryReporter, CryptoService } from '@nis2shield/core';
 
 /**
  * Configuration options for the Nis2Provider.
@@ -51,6 +52,7 @@ interface Nis2ContextType {
     securityState: Nis2SecurityState;
     setIdle: (idle: boolean) => void;
     reportIncident: (type: string, payload: Record<string, any>) => void;
+    cryptoService: CryptoService;
 }
 
 const Nis2Context = createContext<Nis2ContextType | undefined>(undefined);
@@ -89,38 +91,48 @@ export const Nis2Provider: React.FC<Nis2ProviderProps> = ({ children, config }) 
         lastActive: Date.now(),
     });
 
+    // Initialize Core Services
+    const reporter = useMemo(() => new TelemetryReporter({
+        endpoint: config.auditEndpoint,
+        debug: config.debug
+    }), [config.auditEndpoint, config.debug]);
+
+    const guardian = useMemo(() => new SessionGuardian({
+        timeoutMinutes: config.idleTimeoutMinutes || 15,
+        debug: config.debug
+    }), [config.idleTimeoutMinutes, config.debug]);
+
+    const cryptoService = useMemo(() => new CryptoService(), []);
+
+    useEffect(() => {
+        // Bind Guardian Events to React State
+        guardian.on('idle', () => {
+            setSecurityState(prev => ({ ...prev, isIdle: true }));
+            if (config.debug) console.log('🛡️ [NIS2 Guard] User is Idle');
+        });
+
+        guardian.on('active', () => {
+            setSecurityState(prev => ({ ...prev, isIdle: false, lastActive: Date.now() }));
+            if (config.debug) console.log('🛡️ [NIS2 Guard] User is Active');
+        });
+
+        guardian.start();
+
+        return () => {
+            guardian.stop();
+        };
+    }, [guardian, config.debug]);
+
+
     const setIdle = (idle: boolean) => {
         setSecurityState(prev => ({ ...prev, isIdle: idle }));
+        // Also sync with guardian if manually set? 
+        // Guardian manages its own timer, but manual override is okay.
+        if (!idle) guardian.reset();
     };
 
     const reportIncident = async (type: string, payload: Record<string, any>) => {
-        if (config.debug) {
-            console.group('🛡️ [NIS2 Guard] Incident Report');
-            console.log('Type:', type);
-            console.log('Payload:', payload);
-            console.groupEnd();
-        }
-
-        try {
-            await fetch(config.auditEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-NIS2-Client-Version': '0.1.0'
-                },
-                body: JSON.stringify({
-                    type,
-                    payload,
-                    timestamp: new Date().toISOString(),
-                    url: window.location.href,
-                })
-            });
-        } catch (error) {
-            // Fail safely - do not crash the app if the audit server is down
-            if (config.debug) {
-                console.error('Failed to send NIS2 report:', error);
-            }
-        }
+        await reporter.report(type, payload);
     };
 
     const value = {
@@ -130,7 +142,8 @@ export const Nis2Provider: React.FC<Nis2ProviderProps> = ({ children, config }) 
         },
         securityState,
         setIdle,
-        reportIncident
+        reportIncident,
+        cryptoService
     };
 
     return (

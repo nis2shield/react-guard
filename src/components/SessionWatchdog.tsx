@@ -31,82 +31,18 @@ interface Props {
  * />
  */
 export const SessionWatchdog: React.FC<Props> = ({ onIdle, onActive }) => {
-    const { config, setIdle, reportIncident } = useNis2Context();
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const { securityState } = useNis2Context();
+    const wasIdle = useRef(false);
 
-    // Throttle activity updates to avoid performance hit
-    const lastActivityRef = useRef<number>(Date.now());
-
-    const resetTimer = () => {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-        }
-
-        const timeoutMs = (config.idleTimeoutMinutes || 15) * 60 * 1000;
-
-        timerRef.current = setTimeout(() => {
-            setIdle(true);
-            reportIncident('SESSION_IDLE_TIMEOUT', {
-                timeoutMinutes: config.idleTimeoutMinutes
-            });
+    useEffect(() => {
+        if (securityState.isIdle && !wasIdle.current) {
+            wasIdle.current = true;
             if (onIdle) onIdle();
-        }, timeoutMs);
-    };
-
-    const handleActivity = () => {
-        const now = Date.now();
-        // Only process activity if enough time has passed (e.g., 1 second)
-        // to prevent spamming from mousemove
-        if (now - lastActivityRef.current > 1000) {
-            lastActivityRef.current = now;
-            setIdle(false);
+        } else if (!securityState.isIdle && wasIdle.current) {
+            wasIdle.current = false;
             if (onActive) onActive();
-            resetTimer();
         }
-    };
-
-    useEffect(() => {
-        // Events to monitor
-        const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart'];
-
-        const onEvent = () => handleActivity();
-
-        events.forEach(event => {
-            window.addEventListener(event, onEvent);
-        });
-
-        // Initial timer start
-        resetTimer();
-
-        return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            events.forEach(event => {
-                window.removeEventListener(event, onEvent);
-            });
-        };
-    }, [config.idleTimeoutMinutes]);
-
-    // Tab Napping Protection / Visibility Change
-    useEffect(() => {
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                // Tab went to background
-                // Potentially valid, but if it stays hidden too long we might want to lock.
-                // For now, we just log it as a low severity event if needed or just track it.
-            } else {
-                // Tab came back
-                // Check if we have been gone for too long?
-                // For now, let's just reset the timer to ensure we don't logout immediately 
-                // if they just came back, OR we could enforce checks.
-                handleActivity();
-            }
-        };
-
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-        };
-    }, []);
+    }, [securityState.isIdle, onIdle, onActive]);
 
     return null; // Render nothing
 };
