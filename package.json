@@ -1,6 +1,6 @@
 {
     "name": "@nis2shield/react-guard",
-    "version": "0.2.4",
+    "version": "0.2.5",
     "description": "Client-side security telemetry and session protection for NIS2 compliance. Part of the NIS2 Shield ecosystem.",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
