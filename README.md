@@ -1,3 +1,12 @@
+# ⚠️ DEPRECATED / MOVED
+
+> **This repository has been merged into the [NIS2 Shield Frontend Monorepo](https://github.com/nis2shield/frontend).**
+> 
+> Please use `@nis2shield/react-guard` from the monorepo (`packages/react`) for the latest updates, security patches, and features.
+> This standalone repository is now **ARCHIVED** and will no longer receive updates.
+
+---
+
 # React NIS2 Guard (@nis2shield/react-guard)
 
 [![npm version](https://badge.fury.io/js/@nis2shield%2Freact-guard.svg)](https://badge.fury.io/js/@nis2shield%2Freact-guard)
